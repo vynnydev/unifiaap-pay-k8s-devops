@@ -1,0 +1,14 @@
+.git
+.gitignore
+__pycache__
+*.py[cod]
+*.swp
+.vscode
+.idea
+*.md
+k8s/
+terraform/
+docs/
+*.log
+.env
+venv/

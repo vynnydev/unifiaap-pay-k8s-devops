@@ -607,8 +607,8 @@ Este projeto foi desenvolvido como **Checkpoint 3** da disciplina de **DevOps & 
 ### Equipe
 
 - **Desenvolvedor**: Vinicius Prudencio
-- **RM**: [Seu RM]
-- **Turma**: [Sua Turma]
+- **RM**: 555221
+- **Turma**: 2TCNPZ
 - **Professor**: [Nome do Professor]
 - **Instituição**: FIAP - Faculdade de Informática e Administração Paulista
 
