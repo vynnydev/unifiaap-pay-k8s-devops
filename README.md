@@ -133,10 +133,10 @@ cd terraform
 terraform init
 
 # Revise o plano
-terraform plan
+terraform plan -out tfplan
 
 # Aplique as mudanças
-terraform apply
+terraform apply tfplan
 ```
 
 **⏱️ Tempo estimado:** 15-20 minutos
