@@ -51,7 +51,7 @@ A **UniFIAP Pay** é uma solução completa de pagamentos PIX construída com as
 
 ### Diagrama de Infraestrutura
 
-![Arquitetura AWS EKS](docs/images/architecture-diagram.png)
+![Arquitetura AWS EKS](docs/diagram/images/aws-architecture-diagram.png)
 
 <details>
 <summary>📝 Ver descrição detalhada da arquitetura</summary>
