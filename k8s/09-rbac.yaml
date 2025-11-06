@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: unifiaap-monitor-daemonset
+  namespace: unifiappay
+  labels:
+    app: unifiaap-monitor
+    tier: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: unifiaap-monitor
+  template:
+    metadata:
+      labels:
+        app: unifiaap-monitor
+        tier: monitoring
+    spec:
+      hostNetwork: false
+      hostPID: false
+      hostIPC: false
+      
+      tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+        effect: NoSchedule
+      
+      containers:
+      - name: node-monitor
+        image: busybox:1.36
+        command:
+        - sh
+        - -c
+        - |
+          echo "========================================="
+          echo "UniFIAP Pay - Node Monitor"
+          echo "Node: $(hostname)"
+          echo "Start Time: $(date)"
+          echo ""
+          
+          while true; do
+            echo "--- Monitor Check: $(date) ---"
+            
+            if nc -z unifiaap-api-service.unifiappay.svc.cluster.local 80 2>/dev/null; then
+              echo "✓ API: ONLINE"
+            else
+              echo "✗ API: OFFLINE"
+            fi
+            
+            echo "Memory: $(free -m | awk 'NR==2{printf "%s/%sMB", $3,$2}')"
+            echo ""
+            
+            sleep 60
+          done
+        
+        resources:
+          requests:
+            memory: "32Mi"
+            cpu: "25m"
+          limits:
+            memory: "64Mi"
+            cpu: "50m"
+        
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 65534
+          capabilities:
+            drop:
+            - ALL
+            add:
+            - NET_RAW
+        
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+      
+      volumes:
+      - name: tmp
+        emptyDir: {}

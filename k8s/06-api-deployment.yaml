@@ -1,0 +1,80 @@
+---
+# Job para Auditoria Única
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: unifiaap-audit-job
+  namespace: unifiappay
+  labels:
+    app: unifiaap-audit
+spec:
+  backoffLimit: 3
+  ttlSecondsAfterFinished: 3600
+  template:
+    metadata:
+      labels:
+        app: unifiaap-audit
+    spec:
+      serviceAccountName: unifiaap-audit-sa
+      restartPolicy: OnFailure
+      
+      containers:
+      - name: audit-runner
+        image: curlimages/curl:8.5.0
+        command:
+        - sh
+        - -c
+        - |
+          echo "UniFIAP Pay - Auditoria BACEN"
+          echo "Data: $(date)"
+          
+          sleep 10
+          
+          RESPONSE=$(curl -s http://unifiaap-api-service/api/v1/audit/report)
+          echo "Auditoria: $RESPONSE"
+          
+          echo "✓ Auditoria concluída"
+        
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+
+---
+# CronJob Auditoria Periódica
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: unifiaap-audit-cronjob
+  namespace: unifiappay
+  labels:
+    app: unifiaap-audit
+  spec:
+    schedule: "0 23 * * *"
+    successfulJobsHistoryLimit: 3
+    failedJobsHistoryLimit: 3
+    jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: unifiaap-audit-sa
+          restartPolicy: OnFailure
+          containers:
+          - name: periodic-audit
+            image: curlimages/curl:8.5.0
+            command:
+            - sh
+            - -c
+            - |
+              echo "Auditoria Periódica: $(date)"
+              curl -s http://unifiaap-api-service/api/v1/audit/report
+            resources:
+              requests:
+                memory: "64Mi"
+                cpu: "50m"
+              limits:
+                memory: "128Mi"
+                cpu: "100m"
