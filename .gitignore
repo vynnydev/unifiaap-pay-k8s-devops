@@ -198,8 +198,8 @@ credentials
 # ===================================
 
 # Kubernetes secrets (NUNCA commitar!)
-*secrets*.yaml
-!*secrets*.yaml.example
+# *secrets*.yaml
+# !*secrets*.yaml.example
 
 # Kubeconfig files
 kubeconfig
