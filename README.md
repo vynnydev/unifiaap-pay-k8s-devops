@@ -606,7 +606,7 @@ Este projeto foi desenvolvido como **Checkpoint 3** da disciplina de **DevOps & 
 
 ### Equipe
 
-- **Desenvolvedor**: Vinicius Figueiredo
+- **Desenvolvedor**: Vinicius Prudencio
 - **RM**: [Seu RM]
 - **Turma**: [Sua Turma]
 - **Professor**: [Nome do Professor]
@@ -641,7 +641,7 @@ Este projeto está licenciado sob a **MIT License** - veja o arquivo [LICENSE](L
 
 ## 📞 Contato
 
-**Vinicius Figueiredo**
+**Vinicius Prudencio**
 
 - 💼 LinkedIn: [linkedin.com/in/vynnydev](https://linkedin.com/in/vynnydev)
 - 🐙 GitHub: [github.com/vynnydev](https://github.com/vynnydev)
