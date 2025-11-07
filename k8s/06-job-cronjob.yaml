@@ -52,11 +52,11 @@ metadata:
   namespace: unifiappay
   labels:
     app: unifiaap-audit
-  spec:
-    schedule: "0 23 * * *"
-    successfulJobsHistoryLimit: 3
-    failedJobsHistoryLimit: 3
-    jobTemplate:
+spec:
+  schedule: "0 23 * * *"
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
     spec:
       template:
         spec:

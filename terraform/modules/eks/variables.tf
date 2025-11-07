@@ -28,22 +28,22 @@ variable "cluster_version" {
   type        = string
 }
 
-variable "node_instance_type" {
-  description = "Tipo de instância dos nodes"
-  type        = string
-}
+# variable "node_instance_type" {
+#   description = "Tipo de instância dos nodes"
+#   type        = string
+# }
 
-variable "node_desired_size" {
-  description = "Número desejado de nodes"
-  type        = number
-}
+# variable "node_desired_size" {
+#   description = "Número desejado de nodes"
+#   type        = number
+# }
 
-variable "node_min_size" {
-  description = "Número mínimo de nodes"
-  type        = number
-}
+# variable "node_min_size" {
+#   description = "Número mínimo de nodes"
+#   type        = number
+# }
 
-variable "node_max_size" {
-  description = "Número máximo de nodes"
-  type        = number
-}
+# variable "node_max_size" {
+#   description = "Número máximo de nodes"
+#   type        = number
+# }

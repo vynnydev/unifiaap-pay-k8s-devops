@@ -30,29 +30,29 @@ variable "eks_cluster_version" {
   default     = "1.28"
 }
 
-variable "eks_node_instance_type" {
-  description = "Tipo de instância EC2"
-  type        = string
-  default     = "t3.medium"
-}
+# variable "eks_node_instance_type" {
+#   description = "Tipo de instância EC2"
+#   type        = string
+#   default     = "t3.medium"
+# }
 
-variable "eks_node_desired_size" {
-  description = "Número desejado de nodes"
-  type        = number
-  default     = 2
-}
+# variable "eks_node_desired_size" {
+#   description = "Número desejado de nodes"
+#   type        = number
+#   default     = 1
+# }
 
-variable "eks_node_min_size" {
-  description = "Número mínimo de nodes"
-  type        = number
-  default     = 1
-}
+# variable "eks_node_min_size" {
+#   description = "Número mínimo de nodes"
+#   type        = number
+#   default     = 1
+# }
 
-variable "eks_node_max_size" {
-  description = "Número máximo de nodes"
-  type        = number
-  default     = 4
-}
+# variable "eks_node_max_size" {
+#   description = "Número máximo de nodes"
+#   type        = number
+#   default     = 2
+# }
 
 variable "db_name" {
   description = "Nome do banco de dados"

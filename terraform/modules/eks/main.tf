@@ -94,62 +94,94 @@ resource "aws_iam_role_policy_attachment" "node_policy" {
 }
 
 # EKS Node Group
-resource "aws_eks_node_group" "main" {
-  cluster_name    = aws_eks_cluster.main.name
-  node_group_name = "${local.name}-node-group"
-  node_role_arn   = aws_iam_role.node.arn
-  subnet_ids      = var.private_subnet_ids
+# EKS Node Group com SPOT
+# resource "aws_eks_node_group" "main" {
+#   cluster_name    = aws_eks_cluster.main.name
+#   node_group_name = "${local.name}-node-group"
+#   node_role_arn   = aws_iam_role.node.arn
+#   subnet_ids      = var.private_subnet_ids
   
-  instance_types = [var.node_instance_type]
+#   capacity_type = "SPOT"
   
-  scaling_config {
-    desired_size = var.node_desired_size
-    max_size     = var.node_max_size
-    min_size     = var.node_min_size
-  }
+#   instance_types = [
+#     "t3.medium",
+#     "t3a.medium",
+#     "t2.medium"
+#   ]
   
-  update_config {
-    max_unavailable = 1
-  }
+#   scaling_config {
+#     desired_size = var.node_desired_size
+#     max_size     = var.node_max_size
+#     min_size     = var.node_min_size
+#   }
   
-  depends_on = [
-    aws_iam_role_policy_attachment.node_policy
-  ]
+#   update_config {
+#     max_unavailable = 1
+#   }
   
-  tags = {
-    Name = "${local.name}-node-group"
-  }
-}
+#   depends_on = [
+#     aws_iam_role_policy_attachment.node_policy
+#   ]
+  
+#   tags = {
+#     Name = "${local.name}-node-group"
+#   }
+# }
+
+# OIDC Provider para o cluster
+# data "tls_certificate" "cluster" {
+#   url = aws_eks_cluster.main.identity[0].oidc[0].issuer
+# }
+
+# resource "aws_iam_openid_connect_provider" "cluster" {
+#   client_id_list  = ["sts.amazonaws.com"]
+#   thumbprint_list = [data.tls_certificate.cluster.certificates[0].sha1_fingerprint]
+#   url             = aws_eks_cluster.main.identity[0].oidc[0].issuer
+  
+#   tags = {
+#     Name = "${local.name}-oidc-provider"
+#   }
+# }
 
 # EBS CSI Driver IAM Role
-resource "aws_iam_role" "ebs_csi" {
-  name = "${local.name}-ebs-csi-role"
+# resource "aws_iam_role" "ebs_csi" {
+#   name = "${local.name}-ebs-csi-role"
   
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [{
-      Action = "sts:AssumeRoleWithWebIdentity"
-      Effect = "Allow"
-      Principal = {
-        Federated = aws_eks_cluster.main.identity[0].oidc[0].issuer
-      }
-    }]
-  })
-}
+#   assume_role_policy = jsonencode({
+#     Version = "2012-10-17"
+#     Statement = [{
+#       Action = "sts:AssumeRoleWithWebIdentity"
+#       Effect = "Allow"
+#       Principal = {
+#         Federated = aws_iam_openid_connect_provider.cluster.arn
+#       }
+#       Condition = {
+#         StringEquals = {
+#           "${replace(aws_iam_openid_connect_provider.cluster.url, "https://", "")}:sub": "system:serviceaccount:kube-system:ebs-csi-controller-sa"
+#           "${replace(aws_iam_openid_connect_provider.cluster.url, "https://", "")}:aud": "sts.amazonaws.com"
+#         }
+#       }
+#     }]
+#   })
+  
+#   depends_on = [
+#     aws_iam_openid_connect_provider.cluster
+#   ]
+# }
 
-resource "aws_iam_role_policy_attachment" "ebs_csi_policy" {
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
-  role       = aws_iam_role.ebs_csi.name
-}
+# resource "aws_iam_role_policy_attachment" "ebs_csi_policy" {
+#   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+#   role       = aws_iam_role.ebs_csi.name
+# }
 
 # EKS Addon - EBS CSI Driver
-resource "aws_eks_addon" "ebs_csi" {
-  cluster_name             = aws_eks_cluster.main.name
-  addon_name               = "aws-ebs-csi-driver"
-  addon_version            = "v1.25.0-eksbuild.1"
-  service_account_role_arn = aws_iam_role.ebs_csi.arn
+# resource "aws_eks_addon" "ebs_csi" {
+#   cluster_name             = aws_eks_cluster.main.name
+#   addon_name               = "aws-ebs-csi-driver"
+#   addon_version            = "v1.25.0-eksbuild.1"
+#   service_account_role_arn = aws_iam_role.ebs_csi.arn
   
-  depends_on = [
-    aws_eks_node_group.main
-  ]
-}
+#   depends_on = [
+#     aws_eks_node_group.main
+#   ]
+# }

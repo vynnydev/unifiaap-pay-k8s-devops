@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: unifiaap-api-service
+  namespace: unifiappay
+spec:
+  type: NodePort  # ← Mudança
+  ports:
+  - port: 80
+    targetPort: 5000
+    nodePort: 30080  # ← Porta fixa
+    protocol: TCP
+  selector:
+    app: unifiaap-api

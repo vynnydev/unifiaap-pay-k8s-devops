@@ -4,19 +4,19 @@
 
 ![UniFIAP Pay Logo](docs/images/logo.png)
 
-[![AWS](https://img.shields.io/badge/AWS-EKS-FF9900?style=for-the-badge&logo=amazon-aws&logoColor=white)](https://aws.amazon.com/eks/)
-[![Terraform](https://img.shields.io/badge/Terraform-1.0+-7B42BC?style=for-the-badge&logo=terraform&logoColor=white)](https://www.terraform.io/)
 [![Kubernetes](https://img.shields.io/badge/Kubernetes-1.28+-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white)](https://kubernetes.io/)
+[![KIND](https://img.shields.io/badge/KIND-Local_Cluster-4285F4?style=for-the-badge&logo=kubernetes&logoColor=white)](https://kind.sigs.k8s.io/)
 [![Docker](https://img.shields.io/badge/Docker-24.0+-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 [![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![Flask](https://img.shields.io/badge/Flask-3.0-000000?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
+[![Terraform](https://img.shields.io/badge/Terraform-IaC-7B42BC?style=for-the-badge&logo=terraform&logoColor=white)](https://www.terraform.io/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 [![BACEN](https://img.shields.io/badge/Compliance-BACEN-green?style=for-the-badge)](https://www.bcb.gov.br/)
 
-**Fintech de pagamentos homologada pelo Banco Central, especializada em transações via PIX**
+**Fintech de pagamentos homologada pelo Banco Central**  
+**API PIX com Kubernetes, Docker e Infrastructure as Code**
 
-[📖 Documentação](#-documentação) • [🚀 Deploy](#-quick-start) • [🏗️ Arquitetura](#-arquitetura) • [📊 Evidências](#-evidências)
+[🚀 Quick Start](#-quick-start-kind-local) • [📖 Documentação](#-recursos-kubernetes) • [🏗️ Arquitetura](#-arquitetura) • [📊 Evidências](#-evidências)
 
 </div>
 
@@ -24,466 +24,206 @@
 
 ## 📋 Sobre o Projeto
 
-A **UniFIAP Pay** é uma solução completa de pagamentos PIX construída com as melhores práticas de DevOps, Cloud Native e Infrastructure as Code (IaC). Este projeto demonstra a implementação de uma aplicação financeira em produção, seguindo normas de compliance do Banco Central do Brasil.
+A **UniFIAP Pay** é uma solução completa de pagamentos PIX construída com as melhores práticas de DevOps, Cloud Native e Infrastructure as Code (IaC). 
 
-### 🎯 Objetivos
+Este projeto demonstra a implementação de uma aplicação financeira seguindo normas de compliance do Banco Central do Brasil, com infraestrutura totalmente codificada (Terraform) e orquestração Kubernetes.
 
-- ✅ Infraestrutura como Código (Terraform)
-- ✅ Orquestração com Kubernetes (EKS)
-- ✅ Containerização com Docker
-- ✅ CI/CD automatizado
-- ✅ Segurança e compliance BACEN
-- ✅ Alta disponibilidade e escalabilidade
-- ✅ Monitoramento e observabilidade
+### 🎯 Destaques Técnicos
 
-### ⭐ Destaques
-
-- 🔒 **Segurança**: RBAC, NetworkPolicy, SecurityContext, Secrets Management
-- 📈 **Escalabilidade**: HPA, Auto Scaling Groups, Load Balancing
-- 🔍 **Observabilidade**: Logging, Monitoring, Audit Trails
-- 🌐 **Cloud Native**: AWS EKS, RDS, ECR, ALB
-- 📦 **IaC**: Terraform modular e reutilizável
-- 🎓 **Projeto Acadêmico**: FIAP - Checkpoint 3 DevOps
+- ☸️ **Kubernetes Completo**: Todos os 11+ recursos obrigatórios implementados
+- 🐳 **Containerização**: Multi-stage Docker builds otimizados
+- 📦 **IaC com Terraform**: Infraestrutura AWS EKS totalmente codificada
+- 🔒 **Segurança**: RBAC, NetworkPolicy, Secrets, SecurityContext
+- 📊 **Monitoramento**: Jobs, CronJobs, DaemonSets
+- 🔄 **Auto-scaling**: HPA configurado
+- 🎓 **Projeto Acadêmico**: FIAP Checkpoint 3 - DevOps
 
 ---
 
-## 🏗️ Arquitetura
+## 🚀 Quick Start (KIND Local)
 
-### Diagrama de Infraestrutura
-
-![Arquitetura AWS EKS](docs/diagram/images/aws-architecture-diagram.png)
-
-<details>
-<summary>📝 Ver descrição detalhada da arquitetura</summary>
-
-#### Componentes Principais:
-
-**🌐 Rede (VPC)**
-- VPC customizada (10.0.0.0/16)
-- 3 Subnets públicas (para ALB/NAT)
-- 3 Subnets privadas (para EKS/RDS)
-- Internet Gateway e NAT Gateways
-- Route Tables configuradas
-
-**☸️ Kubernetes (EKS)**
-- Cluster EKS 1.28
-- Node Groups com Auto Scaling (2-10 nodes)
-- Instâncias t3.medium
-- EBS CSI Driver para volumes persistentes
-- ALB Ingress Controller
-
-**🗄️ Banco de Dados (RDS)**
-- PostgreSQL 15.4
-- Multi-AZ para alta disponibilidade
-- Backup automático (7 dias)
-- Encryption at rest
-- db.t3.micro (dev) / db.t3.medium (prod)
-
-**📦 Container Registry (ECR)**
-- Repositórios privados
-- Image scanning automático
-- Lifecycle policies (manter últimas 10 imagens)
-- Encryption AES256
-
-**🔐 Segurança**
-- Security Groups restritivos
-- IAM Roles com least privilege
-- Secrets Manager para credenciais
-- NetworkPolicies no Kubernetes
-- RBAC configurado
-
-</details>
-
----
-
-## 🚀 Quick Start
+> 💡 **Por quê KIND?** Devido a limitações de quota na AWS (conta free tier), o projeto foi deployado localmente usando KIND (Kubernetes IN Docker), que permite demonstrar TODOS os recursos Kubernetes sem custos. A infraestrutura AWS está totalmente codificada em Terraform como diferencial técnico.
 
 ### Pré-requisitos
 ```bash
-# Ferramentas necessárias
-- AWS CLI 2.0+
-- Terraform 1.0+
-- kubectl 1.28+
+# Instalar ferramentas
 - Docker 24.0+
+- KIND 0.20+
+- kubectl 1.28+
 - Git
 ```
 
-### 1️⃣ Clone o Repositório
+### 📦 Instalação do KIND
+```bash
+# Linux/WSL
+curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.20.0/kind-linux-amd64
+chmod +x ./kind
+sudo mv ./kind /usr/local/bin/kind
+
+# macOS
+brew install kind
+
+# Windows (PowerShell como Admin)
+choco install kind
+
+# Verificar
+kind version
+```
+
+---
+
+## 🎯 Deploy Completo (5 Minutos)
+
+### **1️⃣ Clone o Repositório**
 ```bash
 git clone https://github.com/vynnydev/unifiaap-pay-k8s-devops.git
 cd unifiaap-pay-k8s-devops
 ```
 
-### 2️⃣ Configure AWS Credentials
+### **2️⃣ Crie o Cluster KIND**
 ```bash
-# Configure suas credenciais
-aws configure
+# Criar cluster com 3 nodes
+kind create cluster --name unifiaap-cluster --config kind-config.yaml
 
-# Ou exporte as variáveis
-export AWS_ACCESS_KEY_ID="sua-access-key"
-export AWS_SECRET_ACCESS_KEY="sua-secret-key"
-export AWS_DEFAULT_REGION="us-east-1"
-```
-
-### 3️⃣ Crie a Infraestrutura
-```bash
-cd terraform
-
-# Inicialize o Terraform
-terraform init
-
-# Revise o plano
-terraform plan -out tfplan
-
-# Aplique as mudanças
-terraform apply tfplan
-```
-
-**⏱️ Tempo estimado:** 15-20 minutos
-
-<details>
-<summary>📸 Ver exemplo de output do Terraform</summary>
-
-![Terraform Apply](docs/evidencias/01-terraform-apply.png)
-
-</details>
-
-### 4️⃣ Configure kubectl
-```bash
-# Comando fornecido pelo output do Terraform
-aws eks update-kubeconfig --name unifiaap-pay-dev-eks --region us-east-1
-
-# Verifique a conexão
+# Verificar
+kubectl cluster-info
 kubectl get nodes
 ```
 
-### 5️⃣ Build e Push da Imagem
+### **3️⃣ Build da Imagem Docker**
 ```bash
-# Execute o script de build
-./scripts/build-and-push-ecr.sh
+# Build
+docker build -f docker/Dockerfile -t unifiaap-pay:latest .
+
+# Carregar no KIND
+kind load docker-image unifiaap-pay:latest --name unifiaap-cluster
+
+# Verificar
+docker exec -it unifiaap-cluster-control-plane crictl images | grep unifiaap
 ```
 
-<details>
-<summary>📸 Ver exemplo de build e push</summary>
-
-![ECR Push](docs/evidencias/02-ecr-push.png)
-
-</details>
-
-### 6️⃣ Deploy da Aplicação
+### **4️⃣ Deploy no Kubernetes**
 ```bash
 cd k8s
 
-# Atualize o endpoint do RDS no secrets
-# (Pegue o valor do output do Terraform)
-terraform output rds_endpoint
+# Deploy completo (11 recursos)
+./deploy-all.sh
 
-# Edite k8s/03-secrets.yaml com o endpoint correto
-
-# Execute o deploy
-./deploy.sh
+# Ou manualmente
+kubectl apply -f 01-namespace.yaml
+kubectl apply -f 02-configmap.yaml
+kubectl apply -f 03-secrets.yaml
+kubectl apply -f 04-storageclass-pvc.yaml
+kubectl apply -f 05-api-deployment.yaml
+kubectl apply -f 06-job-cronjob.yaml
+kubectl apply -f 07-rbac.yaml
+kubectl apply -f 08-daemonset.yaml
+kubectl apply -f 09-network-policy.yaml
+kubectl apply -f 10-network-policy.yaml
+kubectl apply -f 11-hpa-quotas.yaml
 ```
 
-### 7️⃣ Acesse a API
+### **5️⃣ Verificar Deploy**
 ```bash
-# Obtenha a URL do LoadBalancer
-kubectl get svc unifiaap-api-service -n unifiappay
+# Ver todos os recursos
+kubectl get all -n unifiappay
 
-# Teste a API
-curl http://[ALB-URL]/health
+# Ver pods rodando
+kubectl get pods -n unifiappay -o wide
+
+# Ver logs
+kubectl logs -f -n unifiappay -l app=unifiaap-api
 ```
 
-<details>
-<summary>📸 Ver exemplo de pods rodando</summary>
+![Pods Rodando](docs/evidencias/pods-rodando.png)
 
-![Pods Running](docs/evidencias/03-pods-running.png)
+### **6️⃣ Acessar a API**
+```bash
+# Port-forward
+kubectl port-forward -n unifiappay svc/unifiaap-api-service 8080:80
 
-</details>
+# Testar (em outro terminal)
+curl http://localhost:8080/health
+```
+
+![API Funcionando](docs/evidencias/api-funcionando.png)
 
 ---
 
-## 📦 Estrutura do Projeto
-```
-unifiaap-pay-eks/
-│
-├── 📂 terraform/                    # Infraestrutura AWS
-│   ├── main.tf                     # Configuração principal
-│   ├── variables.tf                # Variáveis
-│   ├── outputs.tf                  # Outputs
-│   ├── versions.tf                 # Versões dos providers
-│   ├── terraform.tfvars            # Valores das variáveis
-│   │
-│   └── 📂 modules/                 # Módulos Terraform
-│       ├── 📂 vpc/                 # VPC e Networking
-│       ├── 📂 eks/                 # Cluster EKS
-│       ├── 📂 rds/                 # PostgreSQL RDS
-│       └── 📂 ecr/                 # Container Registry
-│
-├── 📂 src/                         # Código da aplicação
-│   ├── app.py                      # API Flask
-│   └── requirements.txt            # Dependências Python
-│
-├── 📂 docker/                      # Docker configs
-│   ├── Dockerfile                  # Multi-stage build
-│   ├── .dockerignore              # Arquivos ignorados
-│   ├── init-db.sql                # Init script PostgreSQL
-│   └── nginx.conf                 # Configuração Nginx
-│
-├── 📂 k8s/                         # Manifests Kubernetes
-│   ├── 01-namespace.yaml          # Namespace
-│   ├── 02-configmap.yaml          # ConfigMap
-│   ├── 03-secrets.yaml            # Secrets
-│   ├── 04-storageclass-pvc.yaml   # Storage (EBS)
-│   ├── 05-api-deployment.yaml     # API Deployment
-│   ├── 06-job-cronjob.yaml        # Jobs de auditoria
-│   ├── 07-rbac.yaml               # RBAC
-│   ├── 08-hpa.yaml                # Auto scaling
-│   ├── 09-daemonset.yaml          # Monitoring
-│   ├── 10-network-policy.yaml     # Network security
-│   ├── 11-quotas.yaml             # Resource limits
-│   ├── deploy.sh                  # Script de deploy
-│   └── verify.sh                  # Script de verificação
-│
-├── 📂 scripts/                     # Scripts de automação
-│   ├── setup-aws.sh               # Setup AWS CLI
-│   ├── build-and-push-ecr.sh     # Build & push ECR
-│   ├── deploy-eks.sh              # Deploy completo
-│   ├── destroy-infra.sh           # Destruir infra
-│   └── test-api.sh                # Testes da API
-│
-├── 📂 docs/                        # Documentação
-│   ├── 📂 images/                 # Imagens e diagramas
-│   ├── 📂 evidencias/             # Screenshots
-│   ├── AWS-SETUP.md               # Guia AWS
-│   ├── TERRAFORM-GUIDE.md         # Guia Terraform
-│   └── EKS-DEPLOY.md              # Guia deploy EKS
-│
-├── README.md                       # Este arquivo
-├── LICENSE                         # Licença MIT
-└── .gitignore                     # Arquivos ignorados
-```
+## 📡 Testando a API
 
----
-
-## 🔧 Tecnologias Utilizadas
-
-### Infrastructure & Cloud
-
-| Tecnologia | Versão | Descrição |
-|------------|--------|-----------|
-| ![AWS](https://img.shields.io/badge/AWS-Cloud-orange) | - | Amazon Web Services |
-| ![EKS](https://img.shields.io/badge/EKS-1.28-blue) | 1.28 | Managed Kubernetes |
-| ![RDS](https://img.shields.io/badge/RDS-PostgreSQL-blue) | 15.4 | Managed Database |
-| ![ECR](https://img.shields.io/badge/ECR-Registry-orange) | - | Container Registry |
-| ![Terraform](https://img.shields.io/badge/Terraform-1.0+-purple) | 1.0+ | Infrastructure as Code |
-
-### Application & Runtime
-
-| Tecnologia | Versão | Descrição |
-|------------|--------|-----------|
-| ![Python](https://img.shields.io/badge/Python-3.11-blue) | 3.11 | Programming Language |
-| ![Flask](https://img.shields.io/badge/Flask-3.0-black) | 3.0 | Web Framework |
-| ![Docker](https://img.shields.io/badge/Docker-24.0+-blue) | 24.0+ | Containerization |
-| ![Kubernetes](https://img.shields.io/badge/Kubernetes-1.28-blue) | 1.28 | Orchestration |
-| ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-blue) | 15 | Database |
-
-### DevOps & Tools
-
-| Tecnologia | Versão | Descrição |
-|------------|--------|-----------|
-| ![Git](https://img.shields.io/badge/Git-2.0+-red) | 2.0+ | Version Control |
-| ![GitHub](https://img.shields.io/badge/GitHub-Platform-black) | - | Code Hosting |
-| ![Gunicorn](https://img.shields.io/badge/Gunicorn-21.2-green) | 21.2 | WSGI Server |
-| ![Nginx](https://img.shields.io/badge/Nginx-1.24-green) | 1.24 | Reverse Proxy |
-
----
-
-## 📡 API Endpoints
-
-### Health & Status
+### Health Check
 ```bash
-GET /health
-# Retorna status da aplicação
-
-GET /
-# Informações da API
+curl http://localhost:8080/health
 ```
 
-### PIX Transactions
-```bash
-POST /api/v1/pix/transfer
-# Realiza transferência PIX
-
-GET /api/v1/pix/transactions
-# Lista todas as transações
-
-GET /api/v1/pix/balance/{cpf}
-# Consulta saldo de uma conta
+**Resposta:**
+```json
+{
+  "status": "healthy",
+  "checks": {
+    "api": "ok",
+    "database": "connected",
+    "timestamp": "2025-11-07T08:30:00"
+  }
+}
 ```
 
-### Audit & Compliance
+### Consultar Saldo
 ```bash
-GET /api/v1/audit/report
-# Gera relatório de auditoria BACEN
+curl http://localhost:8080/api/v1/pix/balance/12345678900
 ```
 
-### 📝 Exemplo de Uso
+### Realizar Transferência PIX
 ```bash
-# Health Check
-curl http://[ALB-URL]/health
-
-# Consultar Saldo
-curl http://[ALB-URL]/api/v1/pix/balance/12345678900
-
-# Realizar Transferência PIX
-curl -X POST http://[ALB-URL]/api/v1/pix/transfer \
+curl -X POST http://localhost:8080/api/v1/pix/transfer \
   -H "Content-Type: application/json" \
   -d '{
     "from_cpf": "12345678900",
     "to_cpf": "98765432100",
     "amount": 100.00,
-    "description": "Pagamento"
+    "description": "Pagamento teste"
   }'
 ```
 
-<details>
-<summary>📸 Ver exemplo de resposta da API</summary>
+### Listar Transações
+```bash
+curl http://localhost:8080/api/v1/pix/transactions
+```
 
-![API Response](docs/evidencias/04-api-response.png)
-
-</details>
+### Relatório de Auditoria BACEN
+```bash
+curl http://localhost:8080/api/v1/audit/report
+```
 
 ---
 
-## 🔒 Segurança
+## ☸️ Recursos Kubernetes Implementados
 
-### Práticas Implementadas
+### ✅ 11 Recursos Obrigatórios
 
-✅ **Network Security**
-- Security Groups restritivos
-- NetworkPolicies no Kubernetes
-- Subnets privadas para workloads
+| # | Recurso | Arquivo | Descrição | Status |
+|---|---------|---------|-----------|--------|
+| 1 | **Namespace** | `01-namespace.yaml` | Isolamento de recursos | ✅ |
+| 2 | **ConfigMap** | `02-configmap.yaml` | Configurações da aplicação | ✅ |
+| 3 | **Secret** | `03-secrets.yaml` | Credenciais sensíveis | ✅ |
+| 4 | **PVC** | `04-storageclass-pvc.yaml` | Armazenamento persistente | ✅ |
+| 5 | **Deployment** | `05-api-deployment.yaml` | API PIX (2 réplicas) | ✅ |
+| 6 | **Service** | `05-api-deployment.yaml` | Exposição LoadBalancer | ✅ |
+| 7 | **Job** | `06-job-cronjob.yaml` | Auditoria única | ✅ |
+| 8 | **CronJob** | `06-job-cronjob.yaml` | Auditoria periódica | ✅ |
+| 9 | **DaemonSet** | `08-daemonset.yaml` | Monitor por node | ✅ |
+| 10 | **RBAC** | `07-rbac.yaml` | ServiceAccount + Role | ✅ |
+| 11 | **NetworkPolicy** | `09-network-policy.yaml` | Isolamento de rede | ✅ |
 
-✅ **Access Control**
-- RBAC (Role-Based Access Control)
-- IAM Roles com least privilege
-- ServiceAccounts dedicadas
+### 🎁 Recursos Extras
 
-✅ **Data Protection**
-- Secrets Manager para credenciais
-- Encryption at rest (RDS, EBS)
-- Encryption in transit (TLS)
-
-✅ **Container Security**
-- Non-root containers
-- Read-only filesystems
-- Security Context configurado
-- Image scanning (ECR)
-
-✅ **Compliance**
-- Audit logs (BACEN)
-- Resource quotas
-- Pod disruption budgets
-- Backup automático (RDS)
-
-<details>
-<summary>📸 Ver NetworkPolicies configuradas</summary>
-
-![Network Policies](docs/evidencias/05-network-policies.png)
-
-</details>
-
----
-
-## 📊 Monitoramento
-
-### Recursos Monitorados
-
-🔍 **Application Metrics**
-- Health checks (liveness/readiness)
-- Request latency
-- Error rates
-- Transaction volume
-
-📈 **Infrastructure Metrics**
-- CPU e Memory utilization
-- Network throughput
-- Disk I/O
-- Pod status
-
-🔔 **Alerting**
-- Pod crashes
-- High resource usage
-- Failed deployments
-- Database connectivity
-
-### Comandos Úteis
-```bash
-# Ver status dos pods
-kubectl get pods -n unifiappay -o wide
-
-# Ver logs da aplicação
-kubectl logs -f deployment/unifiaap-api-deployment -n unifiappay
-
-# Ver métricas de recursos
-kubectl top nodes
-kubectl top pods -n unifiappay
-
-# Ver HPA status
-kubectl get hpa -n unifiappay
-
-# Ver eventos
-kubectl get events -n unifiappay --sort-by='.lastTimestamp'
-```
-
-<details>
-<summary>📸 Ver dashboard de monitoramento</summary>
-
-![Monitoring](docs/evidencias/06-monitoring.png)
-
-</details>
-
----
-
-## 🧪 Testes
-
-### Testes Automatizados
-
-Execute a suíte completa de testes:
-```bash
-./scripts/test-api.sh
-```
-
-### Testes Manuais
-```bash
-# 1. Health Check
-curl http://[ALB-URL]/health
-
-# 2. Consultar saldo
-curl http://[ALB-URL]/api/v1/pix/balance/12345678900
-
-# 3. Listar transações
-curl http://[ALB-URL]/api/v1/pix/transactions
-
-# 4. Relatório de auditoria
-curl http://[ALB-URL]/api/v1/audit/report
-```
-
-### Teste de Carga
-```bash
-# Usando Apache Bench
-ab -n 1000 -c 10 http://[ALB-URL]/health
-
-# Ou usando hey
-hey -n 1000 -c 10 http://[ALB-URL]/health
-```
-
-<details>
-<summary>📸 Ver resultados dos testes</summary>
-
-![Test Results](docs/evidencias/07-test-results.png)
-
-</details>
+| Recurso | Descrição | Status |
+|---------|-----------|--------|
+| **HPA** | Horizontal Pod Autoscaler | ✅ |
+| **ResourceQuota** | Limites de recursos | ✅ |
+| **LimitRange** | Limites por pod | ✅ |
+| **PodDisruptionBudget** | Alta disponibilidade | ✅ |
 
 ---
 
@@ -491,112 +231,219 @@ hey -n 1000 -c 10 http://[ALB-URL]/health
 
 ### Deploy Completo
 
-| Evidência | Descrição | Screenshot |
-|-----------|-----------|------------|
-| 01 | Terraform Apply | [Ver](docs/evidencias/01-terraform-apply.png) |
-| 02 | ECR Repository | [Ver](docs/evidencias/02-ecr-push.png) |
-| 03 | Pods Running | [Ver](docs/evidencias/03-pods-running.png) |
-| 04 | API Response | [Ver](docs/evidencias/04-api-response.png) |
-| 05 | NetworkPolicies | [Ver](docs/evidencias/05-network-policies.png) |
-| 06 | Monitoring | [Ver](docs/evidencias/06-monitoring.png) |
-| 07 | Test Results | [Ver](docs/evidencias/07-test-results.png) |
-| 08 | HPA Scaling | [Ver](docs/evidencias/08-hpa-scaling.png) |
-| 09 | Job Logs | [Ver](docs/evidencias/09-job-logs.png) |
-| 10 | RDS Database | [Ver](docs/evidencias/10-rds-database.png) |
+![Deploy All YAMLs](docs/evidencias/deploy-all-yamls.png)
 
-<details>
-<summary>📸 Galeria Completa de Evidências</summary>
+### Todos os Recursos Criados
 
-### Infraestrutura AWS
-![VPC](docs/evidencias/aws-vpc.png)
-![EKS](docs/evidencias/aws-eks.png)
-![RDS](docs/evidencias/aws-rds.png)
+![Todos os Recursos](docs/evidencias/todos-os-recursos.png)
 
-### Kubernetes Resources
-![All Resources](docs/evidencias/k8s-all-resources.png)
-![Services](docs/evidencias/k8s-services.png)
+### ConfigMap e Secrets
 
-### Application
-![API Health](docs/evidencias/api-health.png)
-![Transactions](docs/evidencias/api-transactions.png)
+![ConfigMap e Secrets](docs/evidencias/configmap-e-secrets.png)
 
-</details>
+### Jobs e CronJobs
 
----
+![Jobs e CronJobs](docs/evidencias/jobs-e-cronjobs.png)
 
-## 💰 Custos AWS
+### DaemonSet Rodando
 
-### Estimativa Mensal
+![DaemonSet](docs/evidencias/deamonset.png)
 
-| Serviço | Configuração | Custo/Mês |
-|---------|-------------|-----------|
-| **EKS Cluster** | Control Plane | $72 |
-| **EC2 (Nodes)** | 2x t3.medium | $60 |
-| **RDS** | db.t3.micro | $15 |
-| **ALB** | Application Load Balancer | $18 |
-| **NAT Gateway** | 3x NAT Gateways | $97 |
-| **EBS** | 50GB gp3 | $5 |
-| **ECR** | Storage | $5 |
-| **Data Transfer** | Estimado | $10 |
-| **TOTAL** | - | **~$282/mês** |
+### RBAC Configurado
 
-### 💡 Dicas para Reduzir Custos
+![RBAC](docs/evidencias/RBAC.png)
 
-**Desenvolvimento:**
-- Use 1 NAT Gateway ao invés de 3: -$65/mês
-- Use t3.small nodes: -$30/mês
-- **Custo Dev: ~$187/mês**
+### NetworkPolicies
 
-**Produção Otimizada:**
-- Use Reserved Instances: -20%
-- Use Savings Plans: -15%
-- **Custo Prod: ~$225/mês**
+![Network Policies](docs/evidencias/network-policies.png)
+
+### PVC Criado
+
+![PVC](docs/evidencias/PVC.png)
+
+### Services
+
+![Services](docs/evidencias/services.png)
+
+### Logs da Aplicação
+
+![Logs](docs/evidencias/lohs-aplicação.png)
 
 ---
 
-## 🗑️ Destruir Infraestrutura
+## 🏗️ Arquitetura
 
-⚠️ **ATENÇÃO**: Isso vai deletar TODOS os recursos AWS!
-```bash
-# Via script
-./scripts/destroy-infra.sh
+### Diagrama AWS EKS (Infrastructure as Code)
 
-# Ou manualmente
-cd k8s
-kubectl delete namespace unifiappay
+![Arquitetura AWS](docs/diagram/aws-architecture-diagram.png)
 
-cd ../terraform
-terraform destroy
+> 💡 **Nota**: A infraestrutura AWS foi totalmente codificada em Terraform como demonstração de conhecimento em IaC e Cloud Architecture. O deploy funcional foi realizado localmente com KIND devido a limitações de quota da conta AWS free tier.
+
+### Componentes da Infraestrutura Terraform
+```
+terraform/
+├── main.tf              # Configuração principal
+├── variables.tf         # Variáveis
+├── outputs.tf          # Outputs
+└── modules/
+    ├── vpc/            # VPC com 3 AZs
+    ├── eks/            # Cluster EKS 1.28
+    ├── rds/            # PostgreSQL 15
+    └── ecr/            # Container Registry
+```
+
+**Recursos AWS Provisionados:**
+- ✅ VPC com subnets públicas e privadas em 3 AZs
+- ✅ Cluster EKS 1.28 com node groups auto-scaling
+- ✅ RDS PostgreSQL 15 Multi-AZ
+- ✅ ECR para imagens Docker
+- ✅ Security Groups e IAM Roles
+- ✅ NAT Gateways e Internet Gateway
+
+---
+
+## 🔧 Tecnologias Utilizadas
+
+### Core Stack
+
+<div align="center">
+
+![Kubernetes](https://img.shields.io/badge/Kubernetes-1.28-326CE5?style=flat-square&logo=kubernetes&logoColor=white)
+![KIND](https://img.shields.io/badge/KIND-0.20-4285F4?style=flat-square&logo=kubernetes&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-24.0-2496ED?style=flat-square&logo=docker&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=flat-square&logo=python&logoColor=white)
+![Flask](https://img.shields.io/badge/Flask-3.0-000000?style=flat-square&logo=flask&logoColor=white)
+![Terraform](https://img.shields.io/badge/Terraform-1.0+-7B42BC?style=flat-square&logo=terraform&logoColor=white)
+![AWS](https://img.shields.io/badge/AWS-EKS-FF9900?style=flat-square&logo=amazon-aws&logoColor=white)
+
+</div>
+
+### Detalhamento
+
+| Camada | Tecnologia | Versão | Uso |
+|--------|-----------|--------|-----|
+| **Orquestração** | Kubernetes | 1.28 | Gerenciamento de containers |
+| **Runtime Local** | KIND | 0.20 | Cluster Kubernetes local |
+| **Containerização** | Docker | 24.0+ | Build e runtime |
+| **IaC** | Terraform | 1.0+ | Provisionamento AWS |
+| **Backend** | Python | 3.11 | Linguagem da aplicação |
+| **Framework** | Flask | 3.0 | API REST |
+| **WSGI** | Gunicorn | 21.2 | Production server |
+
+---
+
+## 📦 Estrutura do Projeto
+```
+unifiaap-pay-k8s-devops/
+│
+├── 📂 terraform/                    # ⭐ Infrastructure as Code
+│   ├── main.tf                     # Configuração AWS EKS
+│   ├── variables.tf                # Variáveis Terraform
+│   ├── outputs.tf                  # Outputs
+│   └── modules/                    # Módulos reutilizáveis
+│       ├── vpc/                    # VPC e Networking
+│       ├── eks/                    # Cluster EKS
+│       ├── rds/                    # PostgreSQL RDS
+│       └── ecr/                    # Container Registry
+│
+├── 📂 k8s/                         # ⭐ Manifests Kubernetes
+│   ├── 01-namespace.yaml          # Namespace
+│   ├── 02-configmap.yaml          # ConfigMap
+│   ├── 03-secrets.yaml            # Secrets
+│   ├── 04-storageclass-pvc.yaml   # PVC
+│   ├── 05-api-deployment.yaml     # Deployment + Service
+│   ├── 06-job-cronjob.yaml        # Job + CronJob
+│   ├── 07-rbac.yaml               # RBAC
+│   ├── 08-daemonset.yaml          # DaemonSet
+│   ├── 09-network-policy.yaml     # NetworkPolicy
+│   ├── 10-network-policy.yaml     # NetworkPolicy adicional
+│   ├── 11-hpa-quotas.yaml         # HPA + Quotas
+│   └── deploy-all.sh              # Script de deploy
+│
+├── 📂 src/                         # Código da aplicação
+│   ├── app.py                      # API Flask PIX
+│   └── requirements.txt            # Dependências Python
+│
+├── 📂 docker/                      # Docker
+│   ├── Dockerfile                  # Multi-stage build
+│   ├── .dockerignore              # Ignorar arquivos
+│   └── init-db.sql                # Init PostgreSQL
+│
+├── 📂 docs/                        # Documentação
+│   ├── evidencias/                # Screenshots
+│   └── diagram/                   # Diagramas
+│
+├── kind-config.yaml                # Config cluster KIND
+├── README.md                       # Este arquivo
+└── .gitignore                     # Ignorar arquivos
 ```
 
 ---
 
-## 🤝 Contribuindo
+## 🔒 Segurança e Compliance
 
-Contribuições são bem-vindas! Por favor, siga estas etapas:
+### Práticas Implementadas
 
-1. Fork o projeto
-2. Crie uma branch (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add: nova feature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
-5. Abra um Pull Request
+✅ **Network Security**
+- NetworkPolicies para isolamento de pods
+- Deny-all por padrão
+- Regras específicas por aplicação
 
-### 📋 Guidelines
+✅ **Access Control**
+- RBAC com ServiceAccounts
+- Roles com least privilege
+- RoleBindings específicas
 
-- Siga o padrão de commits: `Add:`, `Fix:`, `Update:`, `Remove:`
-- Adicione testes para novas funcionalidades
-- Atualize a documentação
-- Mantenha o código limpo e documentado
+✅ **Data Protection**
+- Secrets para credenciais
+- ConfigMaps para configurações não-sensíveis
+- Variáveis de ambiente seguras
+
+✅ **Container Security**
+- Non-root users
+- Read-only root filesystem
+- Security Context configurado
+- Resource limits definidos
+
+✅ **Compliance BACEN**
+- Audit trails (Jobs de auditoria)
+- Logs centralizados
+- Rastreabilidade de transações
+- Relatórios de compliance
 
 ---
 
-## 📚 Documentação Adicional
+## 💡 Por Que KIND ao Invés de AWS EKS?
 
-- [📖 AWS Setup Guide](docs/AWS-SETUP.md)
-- [📖 Terraform Guide](docs/TERRAFORM-GUIDE.md)
-- [📖 EKS Deploy Guide](docs/EKS-DEPLOY.md)
-- [📖 Troubleshooting](docs/TROUBLESHOOTING.md)
-- [📖 API Documentation](docs/API.md)
+### Contexto Técnico
+
+Durante o desenvolvimento deste projeto, toda a infraestrutura AWS EKS foi codificada em Terraform, demonstrando conhecimento em:
+
+- ✅ Infrastructure as Code
+- ✅ Cloud Architecture
+- ✅ AWS Services (EKS, RDS, ECR, VPC)
+- ✅ Terraform modules
+- ✅ Best practices AWS
+
+**Porém**, devido a limitações de quota na conta AWS free tier (limite de vCPUs), optei por realizar o **deploy funcional em KIND** para demonstrar todos os recursos Kubernetes sem custos.
+
+### Vantagens Desta Abordagem
+
+| Aspecto | Benefício |
+|---------|-----------|
+| **Custo** | $0 (vs ~$280/mês AWS) |
+| **Recursos K8s** | TODOS funcionam (DaemonSet, HPA, PVC, etc) |
+| **Portabilidade** | Roda em qualquer máquina |
+| **Aprendizado** | IaC (Terraform) + K8s (KIND) |
+| **Apresentação** | Demo funcional + código AWS |
+
+### O Que Isso Demonstra
+
+1. ✅ **Versatilidade**: Capacidade de adaptar soluções
+2. ✅ **Conhecimento Cloud**: IaC completo em Terraform
+3. ✅ **Kubernetes**: Todos os recursos implementados
+4. ✅ **Pragmatismo**: Solução funcional sem custos
+5. ✅ **DevOps**: Automação e boas práticas
 
 ---
 
@@ -604,38 +451,84 @@ Contribuições são bem-vindas! Por favor, siga estas etapas:
 
 Este projeto foi desenvolvido como **Checkpoint 3** da disciplina de **DevOps & Cloud Computing** da **FIAP**.
 
-### Equipe
+### Informações
 
-- **Desenvolvedor**: Vinicius Prudencio
+- **Aluno**: Vinicius Prudencio
 - **RM**: 555221
 - **Turma**: 2TCNPZ
-- **Professor**: [Nome do Professor]
-- **Instituição**: FIAP - Faculdade de Informática e Administração Paulista
+- **Instituição**: FIAP
+- **Disciplina**: DevOps & Cloud Computing
+- **Checkpoint**: 3
 
 ### Objetivos Atendidos
 
-- ✅ Infraestrutura como Código (Terraform)
-- ✅ Containerização (Docker)
-- ✅ Orquestração (Kubernetes/EKS)
-- ✅ CI/CD e Automação
-- ✅ Segurança e Compliance
-- ✅ Monitoramento e Observabilidade
-- ✅ Documentação Técnica
+- ✅ Infraestrutura como Código (Terraform AWS EKS)
+- ✅ Containerização (Docker multi-stage)
+- ✅ Orquestração (Kubernetes - 11 recursos obrigatórios)
+- ✅ Deploy funcional (KIND local)
+- ✅ Segurança (RBAC, NetworkPolicy, Secrets)
+- ✅ Monitoramento (Jobs, CronJobs, DaemonSets)
+- ✅ Auto-scaling (HPA)
+- ✅ Documentação completa
+- ✅ Compliance BACEN
+
+---
+
+## 📚 Comandos Úteis
+
+### KIND
+```bash
+# Criar cluster
+kind create cluster --name unifiaap-cluster
+
+# Deletar cluster
+kind delete cluster --name unifiaap-cluster
+
+# Listar clusters
+kind get clusters
+
+# Carregar imagem
+kind load docker-image unifiaap-pay:latest --name unifiaap-cluster
+```
+
+### Kubernetes
+```bash
+# Ver todos os recursos
+kubectl get all -n unifiappay
+
+# Ver pods
+kubectl get pods -n unifiappay -o wide
+
+# Ver logs
+kubectl logs -f -n unifiappay -l app=unifiaap-api
+
+# Descrever pod
+kubectl describe pod -n unifiappay <pod-name>
+
+# Port-forward
+kubectl port-forward -n unifiappay svc/unifiaap-api-service 8080:80
+
+# Ver eventos
+kubectl get events -n unifiappay --sort-by='.lastTimestamp'
+```
+
+### Docker
+```bash
+# Build
+docker build -f docker/Dockerfile -t unifiaap-pay:latest .
+
+# Ver imagens
+docker images | grep unifiaap
+
+# Ver containers
+docker ps | grep unifiaap
+```
 
 ---
 
 ## 📄 Licença
 
-Este projeto está licenciado sob a **MIT License** - veja o arquivo [LICENSE](LICENSE) para detalhes.
-
----
-
-## 🙏 Agradecimentos
-
-- FIAP pelo conhecimento compartilhado
-- AWS pela infraestrutura cloud
-- Comunidade open source
-- Banco Central do Brasil pelas diretrizes de compliance
+Este projeto está licenciado sob a **MIT License**.
 
 ---
 
@@ -658,9 +551,10 @@ Se este projeto foi útil para você, considere dar uma ⭐ no repositório!
 <div align="center">
 
 **UniFIAP Pay** - Fintech Homologada BACEN  
-*Pagamentos PIX seguros, escaláveis e em produção* 🚀
+*Pagamentos PIX seguros e escaláveis com Kubernetes* 🚀
 
 [![Made with ❤️](https://img.shields.io/badge/Made%20with-❤️-red?style=for-the-badge)](https://github.com/vynnydev)
 [![FIAP](https://img.shields.io/badge/FIAP-DevOps-red?style=for-the-badge)](https://www.fiap.com.br/)
+[![KIND](https://img.shields.io/badge/Powered%20by-KIND-4285F4?style=for-the-badge&logo=kubernetes&logoColor=white)](https://kind.sigs.k8s.io/)
 
 </div>
