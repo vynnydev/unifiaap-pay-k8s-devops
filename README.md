@@ -135,7 +135,7 @@ kubectl get pods -n unifiappay -o wide
 kubectl logs -f -n unifiappay -l app=unifiaap-api
 ```
 
-![Pods Rodando](docs/evidencias/pods-rodando.png)
+![Pods Rodando](docs/evidences/pods-rodando.png)
 
 ### **6️⃣ Acessar a API**
 ```bash
@@ -146,7 +146,7 @@ kubectl port-forward -n unifiappay svc/unifiaap-api-service 8080:80
 curl http://localhost:8080/health
 ```
 
-![API Funcionando](docs/evidencias/api-funcionando.png)
+![API Funcionando](docs/evidences/api-funcionando.png)
 
 ---
 
@@ -231,43 +231,43 @@ curl http://localhost:8080/api/v1/audit/report
 
 ### Deploy Completo
 
-![Deploy All YAMLs](docs/evidencias/deploy-all-yamls.png)
+![Deploy All YAMLs](docs/evidences/deploy-all-yamls.png)
 
 ### Todos os Recursos Criados
 
-![Todos os Recursos](docs/evidencias/todos-os-recursos.png)
+![Todos os Recursos](docs/evidences/todos-os-recursos.png)
 
 ### ConfigMap e Secrets
 
-![ConfigMap e Secrets](docs/evidencias/configmap-e-secrets.png)
+![ConfigMap e Secrets](docs/evidences/configmap-e-secrets.png)
 
 ### Jobs e CronJobs
 
-![Jobs e CronJobs](docs/evidencias/jobs-e-cronjobs.png)
+![Jobs e CronJobs](docs/evidences/jobs-e-cronjobs.png)
 
 ### DaemonSet Rodando
 
-![DaemonSet](docs/evidencias/deamonset.png)
+![DaemonSet](docs/evidences/deamonset.png)
 
 ### RBAC Configurado
 
-![RBAC](docs/evidencias/RBAC.png)
+![RBAC](docs/evidences/RBAC.png)
 
 ### NetworkPolicies
 
-![Network Policies](docs/evidencias/network-policies.png)
+![Network Policies](docs/evidences/network-policies.png)
 
 ### PVC Criado
 
-![PVC](docs/evidencias/PVC.png)
+![PVC](docs/evidences/PVC.png)
 
 ### Services
 
-![Services](docs/evidencias/services.png)
+![Services](docs/evidences/services.png)
 
 ### Logs da Aplicação
 
-![Logs](docs/evidencias/lohs-aplicação.png)
+![Logs](docs/evidences/lohs-aplicação.png)
 
 ---
 
