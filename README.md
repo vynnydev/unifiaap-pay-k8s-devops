@@ -2,8 +2,6 @@
 
 <div align="center">
 
-![UniFIAP Pay Logo](docs/images/logo.png)
-
 [![Kubernetes](https://img.shields.io/badge/Kubernetes-1.28+-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white)](https://kubernetes.io/)
 [![KIND](https://img.shields.io/badge/KIND-Local_Cluster-4285F4?style=for-the-badge&logo=kubernetes&logoColor=white)](https://kind.sigs.k8s.io/)
 [![Docker](https://img.shields.io/badge/Docker-24.0+-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
